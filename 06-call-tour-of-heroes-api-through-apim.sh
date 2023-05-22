@@ -6,6 +6,9 @@ az apim product api add \
 --product-id Starter \
 --api-id tour-of-heroes-api
 
+# Get subscription id
+SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+
 # Get starter API Key
 API_KEY=$(az rest --method get \
 --uri "https://management.azure.com/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP}/providers/Microsoft.ApiManagement/service/${APIM_NAME}/subscriptions?api-version=2018-01-01" \

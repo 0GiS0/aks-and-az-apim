@@ -2,7 +2,7 @@
 # Fix inbound ports for API Management
 NSG_RESOURCE_ID=$(az network vnet subnet show --name $APIM_SUBNET_NAME --vnet-name $VNET_NAME --resource-group $RESOURCE_GROUP --query networkSecurityGroup.id -o tsv)
 
-if [ -z "$NSG_ID" ]; then
+if [ -z "$NSG_RESOURCE_ID" ]; then
     echo -e "${GREEN}No NSG found${NC}"
 else
   
