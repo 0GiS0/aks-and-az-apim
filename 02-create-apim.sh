@@ -4,7 +4,7 @@ time az apim create \
 --resource-group ${RESOURCE_GROUP} \
 --name ${APIM_NAME} \
 --location ${LOCATION} \
---publisher-email "gisela.torres@returngis.net" \
+--publisher-email "your@email.com" \
 --publisher-name "return(GiS);" \
 --sku-name Developer
 
