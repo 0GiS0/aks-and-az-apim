@@ -31,7 +31,7 @@ IDENTITY_CLIENT_ID=$(az identity show --name $AKS_NAME-identity --resource-group
 VNET_ID=$(az network vnet show --resource-group $RESOURCE_GROUP --name $VNET_NAME --query id -o tsv)
 
 # Assign Network Contributor role to the user identity
-echo -e "${GREEN}Assign roles to the identity 🎟️ ..."
+echo -e "${GREEN}Assign roles to the identity..."
 az role assignment create --assignee $IDENTITY_CLIENT_ID --scope $VNET_ID --role "Network Contributor"
 # Permission granted to your cluster's managed identity used by Azure may take up 60 minutes to populate.
 
