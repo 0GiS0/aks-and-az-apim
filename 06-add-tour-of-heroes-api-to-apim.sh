@@ -5,7 +5,7 @@ az apim api create \
 --api-id tour-of-heroes-api \
 --path /tour-of-heroes-api \
 --display-name "Tour of Heroes API" \
---service-url http://${INTERNAL_IP_API}/api/hero \
+--service-url http://api.tour-of-heroes.internal/api/hero \
 --protocols http
 
 echo -e "${GREEN} Add GET operation to the API ${NC}"

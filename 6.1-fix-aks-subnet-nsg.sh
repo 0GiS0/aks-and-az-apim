@@ -17,7 +17,3 @@ else
     --access Allow \
     --protocol Tcp
 fi
-
-
-echo -e "${GREEN} Test tour of heroes API ${NC}"
-curl http://${INTERNAL_IP_API}/api/hero
