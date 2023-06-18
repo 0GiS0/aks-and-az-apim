@@ -1,0 +1,7 @@
+service:
+  annotations:
+    { "service.beta.kubernetes.io/azure-load-balancer-internal": "true" }
+providers:
+  kubernetesIngress:
+    publishedService:
+      enabled: true

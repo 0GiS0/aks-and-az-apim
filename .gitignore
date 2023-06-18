@@ -1,1 +1,6 @@
 azure.json
+
+# Ignore pfx and certs
+*.pfx
+*.crt
+*.key

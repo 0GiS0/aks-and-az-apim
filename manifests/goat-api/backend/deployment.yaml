@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goat-api
+spec:
+  selector:
+    matchLabels:
+      app: goat-api
+  template:
+    metadata:
+      labels:
+        app: goat-api
+    spec:
+      containers:
+        - name: goat-api
+          image: ghcr.io/0gis0/dotnet-goat-api/dotnet-goat-api:c572be26ab9b1bc6bcf28d3c0e220e9319d24ce7
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: ConnectionStrings__DefaultConnection
+              valueFrom:
+                secretKeyRef:
+                  name: sqlserver-connection-string
+                  key: connection
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 5077

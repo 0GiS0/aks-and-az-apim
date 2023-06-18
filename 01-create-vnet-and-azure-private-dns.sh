@@ -17,6 +17,13 @@ az network vnet subnet create \
 --name ${APIM_SUBNET_NAME} \
 --address-prefixes 192.168.2.0/28
 
+echo -e "${GREEN}Creating App Gw subnet ${APP_GW_SUBNET_NAME} in ${RESOURCE_GROUP}..."
+az network vnet subnet create \
+--resource-group ${RESOURCE_GROUP} \
+--vnet-name ${VNET_NAME} \
+--name ${APP_GW_SUBNET_NAME} \
+--address-prefixes 192.168.3.0/28
+
 echo -e "${GREEN}Create private DNS zone $PRIVATE_DNS_ZONE_NAME...${NC}"
 PRIVATE_DNS_ZONE_ID=$(az network private-dns zone create -g $RESOURCE_GROUP -n $PRIVATE_DNS_ZONE_NAME --query id -o tsv)
 
