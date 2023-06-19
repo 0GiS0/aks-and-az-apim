@@ -1,4 +1,4 @@
-echo "${GREEN} Creating API Management instance..."
+echo "${GREEN} Creating API Management instance at $(date)..."
 
 time az apim create \
 --resource-group ${RESOURCE_GROUP} \
@@ -25,11 +25,3 @@ az network private-dns link vnet create \
   --name $DEFAULT_API_DOMAIN \
   --virtual-network $VNET_NAME \
   --registration-enabled false
-
-# Add records to the private DNS zone
-echo -e "${GREEN} Add records to the private DNS zone...${NC}"
-az network private-dns record-set a add-record \
-  --resource-group $RESOURCE_GROUP \
-  --zone-name $DEFAULT_API_DOMAIN \
-  --record-set-name $APIM_NAME \
-  --ipv4-address

@@ -3,9 +3,10 @@ az apim api create \
 --resource-group ${RESOURCE_GROUP} \
 --service-name ${APIM_NAME} \
 --api-id tour-of-heroes-api \
+--subscription-required true \
 --path /tour-of-heroes-api \
 --display-name "Tour of Heroes API" \
---service-url http://api.${PRIVATE_DNS_ZONE_NAME}/api/hero \
+--service-url "http://tour-of-heroes.${PRIVATE_DNS_ZONE_NAME}/api/hero" \
 --protocols http https
 
 echo -e "${GREEN} Add GET operation to the API ${NC}"

@@ -25,7 +25,7 @@ source 06-create-vm-to-access-apim-internally.sh
 source 07-configure-app-gateway-to-use-apim-as-backend.sh
 
 # Deploy sample api
-source 08-deploy-sample-api.sh
+source 08-deploy-tour-of-heroes-api.sh
 
 # Add tour of heroes api to apim
 source 09-add-tour-of-heroes-api-to-apim.sh
@@ -41,3 +41,6 @@ source 12-deploy-goat-api.sh
 
 # Enable WAF and custom errors
 source 13-enable-waf-and-custom-errors.sh
+
+# Publish Developer Portal via App Gateway
+source 14-publish-developer-portal-via-app-gateway.sh

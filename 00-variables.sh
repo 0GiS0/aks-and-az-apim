@@ -1,7 +1,7 @@
-RESOURCE_GROUP="aks-and-apim-demo"
+RESOURCE_GROUP="waf-apim-aks-poc"
 LOCATION="westeurope"
 
-PRIVATE_DNS_ZONE_NAME="tour-of-heroes.internal"
+PRIVATE_DNS_ZONE_NAME="apis.internal"
 VNET_NAME="aks-and-apim-vnet"
 AKS_SUBNET_NAME="aks-subnet"
 APIM_SUBNET_NAME="apim-subnet"

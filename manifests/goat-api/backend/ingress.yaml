@@ -19,7 +19,7 @@ metadata:
   # appgw.ingress.kubernetes.io/waf-policy-for-path: "/subscriptions/3dda189f-8e19-4aff-96c5-c9597f59108a/resourceGroups/agic-workload-identity/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies/general-waf-policies" # This annotation allows us to specify the name of the WAF policy to use for the ingress. The default value is default.
 spec:
   rules:
-    - host: goat.tour-of-heroes.internal
+    - host: goat.apis.internal
       http:
         paths:
           - path: /

@@ -9,7 +9,7 @@ SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 # Get starter API Key
 API_KEY=$(az rest --method get \
 --uri "https://management.azure.com/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RESOURCE_GROUP}/providers/Microsoft.ApiManagement/service/${APIM_NAME}/subscriptions?api-version=2018-01-01" \
-| jq '.value[] | select(.properties.productId | endswith("starter")) | .properties.primaryKey')
+| jq --raw-output '.value[] | select(.properties.productId | endswith("starter")) | .properties.primaryKey')
 
 echo -e "${GREEN} Test tour of heroes API ${NC}"
 

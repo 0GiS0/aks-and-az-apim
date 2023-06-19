@@ -121,7 +121,7 @@ az network application-gateway rule update \
 --http-listener "appGatewayHttpListener" \
 --rule-type "Basic" \
 --address-pool "apim" \
---http-settings "default" \
+--http-settings "http" \
 --priority 1
 
 # Delete default http settings
