@@ -1,9 +1,9 @@
-echo -e "${GREEN}Creating an identity for AKS..."
+echo -e "${HIGHLIGHT}Creating an identity for AKS...${NC}"
 az identity create \
 --resource-group ${RESOURCE_GROUP} \
 --name ${AKS_NAME}-identity
 
-echo -e "${GREEN}Waiting 60 seconds for the identity..."
+echo -e "${HIGHLIGHT}Waiting 60 seconds for the identity...${NC}"
 sleep 60
 IDENTITY_ID=$(az identity show --name $AKS_NAME-identity --resource-group $RESOURCE_GROUP --query id -o tsv)
 IDENTITY_CLIENT_ID=$(az identity show --name $AKS_NAME-identity --resource-group $RESOURCE_GROUP --query clientId -o tsv)
@@ -12,7 +12,7 @@ IDENTITY_CLIENT_ID=$(az identity show --name $AKS_NAME-identity --resource-group
 VNET_ID=$(az network vnet show --resource-group $RESOURCE_GROUP --name $VNET_NAME --query id -o tsv)
 
 # Assign Network Contributor role to the user identity
-echo -e "${GREEN}Assign roles to the identity..."
+echo -e "${HIGHLIGHT}Assign roles to the identity...${NC}"
 az role assignment create --assignee $IDENTITY_CLIENT_ID --scope $VNET_ID --role "Network Contributor"
 # Permission granted to your cluster's managed identity used by Azure may take up 60 minutes to populate.
 
@@ -21,30 +21,29 @@ az role assignment list --assignee $IDENTITY_CLIENT_ID --all -o table
 
 AKS_SUBNET_ID=$(az network vnet subnet show --resource-group $RESOURCE_GROUP --vnet-name $VNET_NAME --name $AKS_SUBNET_NAME --query id -o tsv)
 
-echo -e "${GREEN}Creating AKS cluster ${AKS_NAME} in ${RESOURCE_GROUP}..."
+echo -e "${HIGHLIGHT}Creating AKS cluster ${AKS_NAME} in ${RESOURCE_GROUP}...${NC}"
 time az aks create \
 --resource-group ${RESOURCE_GROUP} \
 --name ${AKS_NAME} \
 --node-vm-size Standard_B4ms \
---node-count 1 \
 --enable-managed-identity \
 --vnet-subnet-id $AKS_SUBNET_ID \
 --assign-identity $IDENTITY_ID \
 --enable-addons monitoring \
 --generate-ssh-keys
 
-echo -e "${GREEN}Getting AKS credentials..."
+echo -e "${HIGHLIGHT}Getting AKS credentials...${NC}"
 az aks get-credentials --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --overwrite-existing
 
-echo -e "${GREEN}Fetching the kubelet identity...${NC}"
+echo -e "${HIGHLIGHT}Fetching the kubelet identity...${NC}"
 KUBELET_IDENTITY_CLIENT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $AKS_NAME --query "identityProfile.kubeletidentity.objectId" --output tsv)
 
-echo -e "${GREEN}Assign the 'Reader' and 'DNS Zone Contributor' role...${NC}"
+echo -e "${HIGHLIGHT}Assign the 'Reader' and 'DNS Zone Contributor' role...${NC}"
 az role assignment create --role "Reader" --assignee $KUBELET_IDENTITY_CLIENT_ID --scope $RESOURCE_GROUP_ID
 az role assignment create --role "Private DNS Zone Contributor" --assignee $KUBELET_IDENTITY_CLIENT_ID --scope $PRIVATE_DNS_ZONE_ID
 
 
-echo -e "${GREEN}Create a configuration file for the identity...${NC}"
+echo -e "${HIGHLIGHT}Create a configuration file for the identity...${NC}"
 cat <<EOF > azure.json
 {
     "tenantId": "$(az account show --query tenantId -o tsv)",
@@ -54,10 +53,10 @@ cat <<EOF > azure.json
 }
 EOF
 
-echo -e "${GREEN}Create a secret for the identity...${NC}"
+echo -e "${HIGHLIGHT}Create a secret for the identity...${NC}"
 kubectl create secret generic azure-config-file --from-file=azure.json
 
-echo -e "${GREEN}Deploy ExternalDNS for Azure Private DNS..."
+echo -e "${HIGHLIGHT}Deploy ExternalDNS for Azure Private DNS...${NC}"
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: ServiceAccount
@@ -128,3 +127,5 @@ EOF
 
 # Wait for external-dns to be ready
 kubectl wait --for=condition=available --timeout=600s deployment/external-dns-private
+
+echo -e "${HIGHLIGHT}ExternalDNS deployed!${NC}"

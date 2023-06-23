@@ -1,141 +1,218 @@
-echo -e "${GREEN} Configuring App Gw to use APIM as backend... ${NC}"
+echo -e "${HIGHLIGHT}Configuring App Gw to use APIM as backend... ${NC}"
 
-echo -e "${GREEN} Create APIM backend pool with the API Management service ${NC}"
+echo -e "${HIGHLIGHT}Create APIM backend pool with the API Management service ${NC}"
 az network application-gateway address-pool create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
---name apim \
---servers $APIM_NAME.azure-api.net
+--name apim-portal \
+--servers portal.$CUSTOM_DOMAIN
 
-# Create a sink pool for API Management requests we want to discard
-# az network application-gateway address-pool create \
-# --gateway-name $APP_GW_NAME \
-# --resource-group $RESOURCE_GROUP \
-# --name sinkPool
+az network application-gateway address-pool create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name apim-gateway \
+--servers api.$CUSTOM_DOMAIN
 
-# Configure frontend ports
-# echo -e "${GREEN} Configure frontend ports ${NC}"
-# az network application-gateway frontend-port create \
-# --gateway-name $APP_GW_NAME \
-# --resource-group $RESOURCE_GROUP \
-# --name port_80 \
-# --port 80
+az network application-gateway address-pool create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name apim-management \
+--servers management.$CUSTOM_DOMAIN
 
+echo -e "${HIGHLIGHT}Create 443 frontend port... ${NC}"
 az network application-gateway frontend-port create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
 --name port_443 \
 --port 443
 
-echo -e "${GREEN} Check frontend ports ${NC}"
-az network application-gateway frontend-port list --gateway-name $APP_GW_NAME -g $RESOURCE_GROUP
+echo -e "${HIGHLIGHT} Check frontend ports ${NC}"
+az network application-gateway frontend-port list --gateway-name $APP_GW_NAME -g $RESOURCE_GROUP -o table
 
-# Probe health for API Management
+
+echo -e "${HIGHLIGHT}Create health probes for the backends${NC}"
+
 az network application-gateway probe create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
---name "apim-gw-health-probe" \
---path "/status-0123456789abcdef" \
---host-name-from-http-settings true \
---protocol "Http" \
---interval 30 \
---threshold 3 \
---timeout 30 
-
-# Create http settings for Http 
-az network application-gateway http-settings create \
---gateway-name $APP_GW_NAME \
---resource-group $RESOURCE_GROUP \
---name "http" \
---port 80 \
---protocol Http \
---cookie-based-affinity Disabled \
---timeout 20 \
---probe "apim-gw-health-probe" \
---host-name-from-backend-pool true
-
-# Probe health for API Management https
-az network application-gateway probe create \
---gateway-name $APP_GW_NAME \
---resource-group $RESOURCE_GROUP \
---name "apim-gw-health-probe-https" \
+--name "apim-api-probe" \
 --path "/status-0123456789abcdef" \
 --host-name-from-http-settings true \
 --protocol "Https" \
 --interval 30 \
 --threshold 3 \
---timeout 30 
+--timeout 30
 
-# Create http settings for Https
+az network application-gateway probe create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name "apim-management-probe" \
+--path "/ServiceStatus" \
+--host-name-from-http-settings true \
+--protocol "Https" \
+--interval 30 \
+--threshold 3 \
+--timeout 30
+
+az network application-gateway probe create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name "apim-portal-probe" \
+--path "/signin" \
+--host-name-from-http-settings true \
+--protocol "Https" \
+--interval 30 \
+--threshold 3 \
+--timeout 30
+
+echo -e "${HIGHLIGHT}Create backend settings${NC}"
+
 az network application-gateway http-settings create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
---name "https" \
+--name "apim-api" \
 --port 443 \
 --protocol Https \
 --cookie-based-affinity Disabled \
 --timeout 20 \
---host-name-from-backend-pool true \
---probe "apim-gw-health-probe-https"
+--probe "apim-api-probe" \
+--host-name-from-backend-pool true
 
+az network application-gateway http-settings create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name "apim-management" \
+--port 443 \
+--protocol Https \
+--cookie-based-affinity Disabled \
+--timeout 20 \
+--probe "apim-management-probe" \
+--host-name-from-backend-pool true
 
-# Generate self-signed certificate
-echo -e "${GREEN} Generate self-signed certificate ${NC}"
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout appGatewaySslCert.key -out appGatewaySslCert.crt -subj "/CN=${APIM_NAME}.azure-api.net/O=${APIM_NAME}.azure-api.net"
-openssl pkcs12 -export -out appGatewaySslCert.pfx -inkey appGatewaySslCert.key -in appGatewaySslCert.crt -passout pass:1234
+az network application-gateway http-settings create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name "apim-portal" \
+--port 443 \
+--protocol Https \
+--cookie-based-affinity Disabled \
+--timeout 20 \
+--probe "apim-portal-probe" \
+--host-name-from-backend-pool true
 
-echo -e "${GREEN} Upload certificate to Azure ${NC}"
+echo -e "${HIGHLIGHT} Upload certificates to App Gw...${NC}"
 az network application-gateway ssl-cert create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
---name appGatewaySslCert \
---cert-file appGatewaySslCert.pfx \
---cert-password "1234"
+--name apim-api \
+--cert-file api.$CUSTOM_DOMAIN.pfx \
+--cert-password $CERT_PASSWORD
 
-echo -e "${GREEN} Create http listener for Https ${NC}"
+az network application-gateway ssl-cert create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name apim-management \
+--cert-file management.$CUSTOM_DOMAIN.pfx \
+--cert-password $CERT_PASSWORD
+
+az network application-gateway ssl-cert create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name apim-portal \
+--cert-file portal.$CUSTOM_DOMAIN.pfx \
+--cert-password $CERT_PASSWORD
+
+
+echo -e "${HIGHLIGHT} Create listeners for the endpoints...${NC}"
 az network application-gateway http-listener create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
---name "https" \
+--name "portal.$CUSTOM_DOMAIN" \
 --frontend-ip appGatewayFrontendIP \
 --frontend-port port_443 \
---ssl-cert appGatewaySslCert
+--ssl-cert apim-portal \
+--host-name portal.$CUSTOM_DOMAIN
 
-#Create rule that glues the listener and the backend pool for https
+az network application-gateway http-listener create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name "api.$CUSTOM_DOMAIN" \
+--frontend-ip appGatewayFrontendIP \
+--frontend-port port_443 \
+--ssl-cert apim-api \
+--host-name api.$CUSTOM_DOMAIN
+
+az network application-gateway http-listener create \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name "management.$CUSTOM_DOMAIN" \
+--frontend-ip appGatewayFrontendIP \
+--frontend-port port_443 \
+--ssl-cert apim-management \
+--host-name management.$CUSTOM_DOMAIN
+
+echo -e "${HIGHLIGHT}Create rules that glue the listeners and the backend pools...${NC}"
 az network application-gateway rule create \
 --gateway-name $APP_GW_NAME \
---name "https" \
+--name "apim-portal-rule" \
 --resource-group $RESOURCE_GROUP \
---http-listener "https" \
+--http-listener "portal.$CUSTOM_DOMAIN" \
 --rule-type "Basic" \
---address-pool "apim" \
---http-settings "https" \
---priority 2
+--address-pool "apim-portal" \
+--http-settings "apim-portal" \
+--priority 100
 
-
-#Update default rule that glues the listener and the backend pool
-az network application-gateway rule update \
+az network application-gateway rule create \
 --gateway-name $APP_GW_NAME \
---name "rule1" \
+--name "apim-api-rule" \
 --resource-group $RESOURCE_GROUP \
---http-listener "appGatewayHttpListener" \
+--http-listener "api.$CUSTOM_DOMAIN" \
 --rule-type "Basic" \
---address-pool "apim" \
---http-settings "http" \
---priority 1
+--address-pool "apim-gateway" \
+--http-settings "apim-api" \
+--priority 101
 
-# Delete default http settings
-echo -e "${GREEN} Delete default http settings ${NC}"
+az network application-gateway rule create \
+--gateway-name $APP_GW_NAME \
+--name "apim-management-rule" \
+--resource-group $RESOURCE_GROUP \
+--http-listener "management.$CUSTOM_DOMAIN" \
+--rule-type "Basic" \
+--address-pool "apim-management" \
+--http-settings "apim-management" \
+--priority 102
+
+echo -e "${HIGHLIGHT} Check backend health ${NC}"
+az network application-gateway show-backend-health \
+--name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP  \
+--query "backendAddressPools[].backendHttpSettingsCollection[].servers[]" -o table
+
+echo -e "${HIGHLIGHT}Delete default settings...${NC}"
+
+echo -e "${HIGHLIGHT}Delete rule1${NC}"
+az network application-gateway rule delete \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name "rule1"
+
+echo -e "${HIGHLIGHT}Delete appGatewayHttpListener${NC}"
+az network application-gateway http-listener delete \
+--gateway-name $APP_GW_NAME \
+--resource-group $RESOURCE_GROUP \
+--name "appGatewayHttpListener"
+
+echo -e "${HIGHLIGHT}Check appGatewayBackendHttpSettings ${NC}"
 az network application-gateway http-settings delete \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
 --name "appGatewayBackendHttpSettings"
 
 # Delete default backend pool
-echo -e "${GREEN} Delete default backend pool ${NC}"
+echo -e "${HIGHLIGHT}Delete default backend pool ${NC}"
 az network application-gateway address-pool delete \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
 --name "appGatewayBackendPool"
 
-echo -e "${GREEN} Done 🫡... ${NC}"
+echo -e "${HIGHLIGHT} Done 🫡... ${NC}"

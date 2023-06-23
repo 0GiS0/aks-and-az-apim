@@ -1,4 +1,6 @@
-RESOURCE_GROUP="waf-apim-aks-poc"
+CUSTOM_DOMAIN="domaingis.com"
+
+RESOURCE_GROUP="waf-apim-aks-${CUSTOM_DOMAIN//./}"
 LOCATION="westeurope"
 
 PRIVATE_DNS_ZONE_NAME="apis.internal"
@@ -7,20 +9,20 @@ AKS_SUBNET_NAME="aks-subnet"
 APIM_SUBNET_NAME="apim-subnet"
 
 AKS_NAME="aks-cluster"
-APIM_NAME="apim-demo-${RANDOM}"
+APIM_NAME="apim-demo-${CUSTOM_DOMAIN//./}"
 
 APP_GW_NAME="app-gw"
 APP_GW_PUBLIC_IP_NAME="app-gw-ip"
 APP_GW_SUBNET_NAME="app-gw-subnet"
 
-#Remove dashes from APIM name
-APIM_NAME_WITHOUT_DASHES=${APIM_NAME//-/}
+STORAGE_ACCOUNT_NAME="${APIM_NAME//-/}storage"
 
-STORAGE_ACCOUNT_NAME="${APIM_NAME_WITHOUT_DASHES}storage"
+APP_GW_PUBLIC_IP_DNS_NAME="${CUSTOM_DOMAIN//./}"
 
 # Colors for the output
 RED='\033[0;31m'
-GREEN='\033[0;32m'
+# Highlight text with yello background
+HIGHLIGHT='\033[0;30;43m'
 NC='\033[0m'
 
-echo -e "${GREEN}Variables set 👍${NC}"
+echo -e "${HIGHLIGHT}Variables set 👍${NC}"

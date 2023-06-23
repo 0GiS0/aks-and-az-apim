@@ -1,11 +1,12 @@
-echo "${GREEN}Creating Application Gateway..."
+echo "${HIGHLIGHT}Creating Application Gateway...${NC}"
 
 # Create public ip
 az network public-ip create \
 --resource-group $RESOURCE_GROUP \
 --name $APP_GW_PUBLIC_IP_NAME \
 --allocation-method Static \
---sku Standard
+--sku Standard \
+--dns-name $APP_GW_PUBLIC_IP_DNS_NAME
 
 # Create a WAF policy
 GENERAL_WAF_POLICY="general-waf-policies"
@@ -33,16 +34,16 @@ time az network application-gateway create \
 
 APP_GW_ID=$(az network application-gateway show --name $APP_GW_NAME --resource-group $RESOURCE_GROUP --query id -o tsv)
 
-echo -e "${GREEN}Application Gateway created${NC}"
+echo -e "${HIGHLIGHT}Application Gateway created${NC}"
 
-echo -e "${GREEN}Create workspace for diagnostics"
+echo -e "${HIGHLIGHT}Create workspace for diagnostics${NC}"
 WORKSPACE_ID=$(az monitor log-analytics workspace create \
 --resource-group $RESOURCE_GROUP \
 --workspace-name $APP_GW_NAME-workspace \
 --location $LOCATION \
 --query id -o tsv)
 
-echo -e "${GREEN}Enable diagnostics settings"
+echo -e "${HIGHLIGHT}Enable diagnostics settings${NC}"
 az monitor diagnostic-settings create \
 --name $APP_GW_NAME-diag \
 --resource $APP_GW_ID \

@@ -1,4 +1,4 @@
-echo -e "${GREEN} Create Tour of Heroes API in API Management ${NC}"
+echo -e "${HIGHLIGHT} Create Tour of Heroes API in API Management ${NC}"
 az apim api create \
 --resource-group ${RESOURCE_GROUP} \
 --service-name ${APIM_NAME} \
@@ -9,7 +9,7 @@ az apim api create \
 --service-url "http://tour-of-heroes.${PRIVATE_DNS_ZONE_NAME}/api/hero" \
 --protocols http https
 
-echo -e "${GREEN} Add GET operation to the API ${NC}"
+echo -e "${HIGHLIGHT} Add GET operation to the API ${NC}"
 az apim api operation create \
 --resource-group ${RESOURCE_GROUP} \
 --service-name ${APIM_NAME} \
@@ -18,7 +18,7 @@ az apim api operation create \
 --method GET \
 --display-name "Get all heroes"
 
-echo -e "${GREEN} Add POST operation to the API ${NC}"
+echo -e "${HIGHLIGHT} Add POST operation to the API ${NC}"
 az apim api operation create \
 --resource-group ${RESOURCE_GROUP} \
 --service-name ${APIM_NAME} \

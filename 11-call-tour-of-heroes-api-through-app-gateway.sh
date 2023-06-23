@@ -25,6 +25,8 @@ curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" \
 
 echo -e "${GREEN} Get heroes ${NC}"
 curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "http://${APP_GW_PUBLIC_IP}/tour-of-heroes-api/" | jq
+curl -k -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "https://api.${CUSTOM_DOMAIN}/tour-of-heroes-api/" | jq
+
 
 echo -e "${GREEN} Get heroes using HTTPS ${NC}"
 curl -k -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "https://${APP_GW_PUBLIC_IP}/tour-of-heroes-api/" | jq
