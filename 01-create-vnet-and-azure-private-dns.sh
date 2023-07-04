@@ -1,7 +1,7 @@
 echo -e "${HIGHLIGHT}Creating resource group ${RESOURCE_GROUP} in ${LOCATION}...${NC}"
 RESOURCE_GROUP_ID=$(az group create --name ${RESOURCE_GROUP} --location ${LOCATION} --query id -o tsv)
 
-echo -e "${HIGHLIGHT}Creating vnet ${VNET_NAME} in ${RESOURCE_GROUP}..."
+echo -e "${HIGHLIGHT}Creating vnet ${VNET_NAME} in ${RESOURCE_GROUP}...${NC}"
 az network vnet create \
 --resource-group ${RESOURCE_GROUP} \
 --name ${VNET_NAME} \
@@ -26,6 +26,8 @@ az network vnet subnet create \
 
 echo -e "${HIGHLIGHT}Create private DNS zone $PRIVATE_DNS_ZONE_NAME...${NC}"
 PRIVATE_DNS_ZONE_ID=$(az network private-dns zone create -g $RESOURCE_GROUP -n $PRIVATE_DNS_ZONE_NAME --query id -o tsv)
+
+sleep 10
 
 # Link the private DNS zone to the virtual network
 echo -e "${HIGHLIGHT}Link the private DNS zone to the virtual network...${NC}"

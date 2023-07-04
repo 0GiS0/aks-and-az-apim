@@ -1,4 +1,4 @@
-CUSTOM_DOMAIN="domaingis.com"
+CUSTOM_DOMAIN="thedev.es"
 
 RESOURCE_GROUP="waf-apim-aks-${CUSTOM_DOMAIN//./}"
 LOCATION="westeurope"
@@ -21,7 +21,7 @@ APP_GW_PUBLIC_IP_DNS_NAME="${CUSTOM_DOMAIN//./}"
 
 # Colors for the output
 RED='\033[0;31m'
-# Highlight text with yello background
+# Highlight text with yellow background
 HIGHLIGHT='\033[0;30;43m'
 NC='\033[0m'
 
