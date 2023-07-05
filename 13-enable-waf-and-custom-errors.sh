@@ -36,6 +36,6 @@ az network application-gateway waf-policy policy-setting update \
 --state Enabled
 
 echo -e "${GREEN}Check APIs${NC}"
-echo "http://${APP_GW_PUBLIC_IP}/tour-of-heroes-api/?subscription-key=${API_KEY}"
-echo "https://${APP_GW_PUBLIC_IP}/goat/customer?id=1&subscription-key=${API_KEY}"
-echo "https://${APP_GW_PUBLIC_IP}/goat/customer?subscription-key=${API_KEY}&id=1%20or%201=1"
+echo "https://api.$CUSTOM_DOMAIN/tour-of-heroes-api/?subscription-key=${API_KEY}"
+echo "https://api.$CUSTOM_DOMAIN/goat/customer?id=1&subscription-key=${API_KEY}"
+echo "https://api.$CUSTOM_DOMAIN/goat/customer?subscription-key=${API_KEY}&id=1%20or%201=1"

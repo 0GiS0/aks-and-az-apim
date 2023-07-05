@@ -101,21 +101,21 @@ az network application-gateway http-settings create \
 --host-name-from-backend-pool true
 
 echo -e "${HIGHLIGHT} Upload certificates to App Gw...${NC}"
-az network application-gateway ssl-cert create \
+sudo az network application-gateway ssl-cert create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
 --name apim-api \
 --cert-file api.$CUSTOM_DOMAIN.pfx \
 --cert-password $CERT_PASSWORD
 
-az network application-gateway ssl-cert create \
+sudo az network application-gateway ssl-cert create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
 --name apim-management \
 --cert-file management.$CUSTOM_DOMAIN.pfx \
 --cert-password $CERT_PASSWORD
 
-az network application-gateway ssl-cert create \
+sudo az network application-gateway ssl-cert create \
 --gateway-name $APP_GW_NAME \
 --resource-group $RESOURCE_GROUP \
 --name apim-portal \

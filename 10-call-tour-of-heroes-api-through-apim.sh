@@ -1,11 +1,3 @@
-# Add api to a starter product
-echo -e "${GREEN} Add the API to the Starter product ${NC}"
-az apim product api add \
---resource-group ${RESOURCE_GROUP} \
---service-name ${APIM_NAME} \
---product-id Starter \
---api-id tour-of-heroes-api
-
 # Get subscription id
 SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 

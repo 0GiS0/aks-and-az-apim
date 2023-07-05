@@ -15,11 +15,11 @@ source 03-create-apim.sh
 # Create custom domains for apim
 # You have to execute this step manually: 03.1-apim-custom-domains.sh
 
-# Create App Gateway
-source 04-create-app-gateway.sh
-
 # Connect apim to vnet
-source 05-connect-apim-to-vnet-internal-mode.sh
+source 04-connect-apim-to-vnet-internal-mode.sh
+
+# Create App Gateway
+source 05-create-app-gateway.sh
 
 # Create VM to access apim internally
 source 06-create-vm-to-access-apim-internally.sh
@@ -35,6 +35,8 @@ source 09-add-tour-of-heroes-api-to-apim.sh
 
 # Call tour of heroes api through apim (It doesn't work because APIM is internal)
 source 10-call-tour-of-heroes-api-through-apim.sh
+
+# Update your DNS provider with the public IP of the App Gateway for the three subdomains
 
 # Call tour of heroes api through app gateway
 source 11-call-tour-of-heroes-api-through-app-gateway.sh

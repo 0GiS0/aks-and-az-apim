@@ -1,11 +1,11 @@
-echo -e "${HIGHLIGHT}Deploying sample API to AKS cluster ${AKS_NAME} in ${RESOURCE_GROUP}..."
+echo -e "${HIGHLIGHT}Deploying sample API to AKS cluster ${AKS_NAME} in ${RESOURCE_GROUP}...${NC}"
 kubectl create namespace tour-of-heroes-api
 kubectl apply -f manifests/tour-of-heroes-api --recursive --namespace tour-of-heroes-api
 
-echo -e "${HIGHLIGHT}Waiting for sample API to be ready..."
+echo -e "${HIGHLIGHT}Waiting for sample API to be ready...${NC}"
 kubectl wait --for=condition=available --timeout=600s deployment/tour-of-heroes-sql --namespace tour-of-heroes-api
 
-echo -e "${HIGHLIGHT}Done 👍🏻"
+echo -e "${HIGHLIGHT}Done 👍🏻${NC}"
 
 echo -e "${HIGHLIGHT} Get internal IP for tour-of-heroes-api service ${NC}"
 INTERNAL_IP_API=$(kubectl get service tour-of-heroes-api -n tour-of-heroes-api -o jsonpath='{.status.loadBalancer.ingress[0].ip}')

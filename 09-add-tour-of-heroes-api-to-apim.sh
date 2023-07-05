@@ -26,3 +26,10 @@ az apim api operation create \
 --url-template / \
 --method POST \
 --display-name "Add hero"
+
+echo -e "${GREEN} Add the API to the Starter product ${NC}"
+az apim product api add \
+--resource-group ${RESOURCE_GROUP} \
+--service-name ${APIM_NAME} \
+--product-id Starter \
+--api-id tour-of-heroes-api

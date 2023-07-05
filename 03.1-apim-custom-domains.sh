@@ -61,9 +61,9 @@ sudo openssl pkcs12 -export -out ./portal.$CUSTOM_DOMAIN.pfx \
 -passout pass:$CERT_PASSWORD
 
 
-API_ENCODED_CERT_DATA=$(base64 -i ./api.$CUSTOM_DOMAIN.pfx)
-PORTAL_ENCODED_CERT_DATA=$(base64 -i ./portal.$CUSTOM_DOMAIN.pfx)
-MANAGEMENT_ENCODED_CERT_DATA=$(base64 -i ./management.$CUSTOM_DOMAIN.pfx)
+API_ENCODED_CERT_DATA=$(sudo base64 -i ./api.$CUSTOM_DOMAIN.pfx)
+PORTAL_ENCODED_CERT_DATA=$(sudo base64 -i ./portal.$CUSTOM_DOMAIN.pfx)
+MANAGEMENT_ENCODED_CERT_DATA=$(sudo base64 -i ./management.$CUSTOM_DOMAIN.pfx)
 
 # Settings for custom domains
 hostnamesConfiguration="[

@@ -1,12 +1,12 @@
-echo -e "${GREEN}Deploying Goat API to AKS cluster ${AKS_NAME} in ${RESOURCE_GROUP}..."
+echo -e "${GREEN}Deploying Goat API to AKS cluster ${AKS_NAME} in ${RESOURCE_GROUP}...${NC}"
 kubectl create namespace goat-api
 kubectl apply -f manifests/goat-api --recursive --namespace goat-api
 
 # Deploy Traefik using Helm
-helm repo update
+helm repo add traefik https://traefik.github.io/charts
 helm install traefik traefik/traefik --values manifests/traefik-config/values.yaml
 
-echo -e "${GREEN}Waiting for Goat API to be ready..."
+echo -e "${GREEN}Waiting for Goat API to be ready...${NC}"
 kubectl wait --for=condition=available --timeout=600s deployment/mssql-deployment --namespace goat-api
 
 echo -e "${GREEN}Let's wait 30 seconds for the SQL Server to be ready...${NC}"
@@ -67,13 +67,13 @@ az apim product api add \
 --api-id goat-api
 
 echo -e "${GREEN} Call customer operation ${NC}"
-curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" http://$APP_GW_PUBLIC_IP/goat/customer?id=1 | jq
+curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "https://api.$CUSTOM_DOMAIN/goat/customer?id=1" | jq
 
 echo -e "${GREEN} SQL Injection ${NC}"
-curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "http://${APP_GW_PUBLIC_IP}/goat/customer?id=1%20or%201=1" | jq
+curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "https://api.${CUSTOM_DOMAIN}/goat/customer?id=1%20or%201=1" | jq
 
 echo -e "${GREEN} SQL Injection via HTTPS ${NC}"
-curl -k -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "https://${APP_GW_PUBLIC_IP}/goat/customer?id=1%20or%201=1" | jq
+curl -k -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "https://api.${CUSTOM_DOMAIN}/goat/customer?id=1%20or%201=1" | jq
 
 echo -e "${GREEN} Add credit card ${NC}"
-curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" -H "Content-Type: application/json" -d '{"id":1,"CardNumber":"1234567890123456","ExpirationDate":"2021-12-31","CVV": "100", "UserId": "1"}' "http://${APP_GW_PUBLIC_IP}/goat/addcreditcard" | jq
+curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" -H "Content-Type: application/json" -d '{"id":1,"CardNumber":"1234567890123456","ExpirationDate":"2021-12-31","CVV": "100", "UserId": "1"}' "https://api.${CUSTOM_DOMAIN}/goat/addcreditcard" | jq
