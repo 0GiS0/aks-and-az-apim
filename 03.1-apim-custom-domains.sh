@@ -21,7 +21,6 @@ brew install certbot
 # Create certificate
 CERT_PASSWORD="1234"
 EMAIL="giselatb@outlook.com"
-# LETSENCRYPT_URL="https://acme-staging-v02.api.letsencrypt.org/directory"
 LETSENCRYPT_URL="https://acme-v02.api.letsencrypt.org/directory"
 
 

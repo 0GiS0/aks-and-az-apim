@@ -12,6 +12,9 @@ source 02-create-aks-and-deploy-externaldns.sh
 # Create apim instance
 source 03-create-apim.sh
 
+# Create custom domains for apim
+# You have to execute this step manually: 03.1-apim-custom-domains.sh
+
 # Create App Gateway
 source 04-create-app-gateway.sh
 

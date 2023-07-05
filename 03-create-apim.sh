@@ -10,8 +10,6 @@ time az apim create \
 
 echo -e "${HIGHLIGHT} API Management instance created${NC}"
 
-# echo -e "${HIGHLIGHT} Setup custom domain names ${NC}"
-
 echo -e "${HIGHLIGHT} Create private DNS zone ${CUSTOM_DOMAIN} to resolve the custom domain internally...${NC}"
 az network private-dns zone create -g $RESOURCE_GROUP -n $CUSTOM_DOMAIN
 
