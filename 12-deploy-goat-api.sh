@@ -20,8 +20,6 @@ echo -e "${GREEN}Done 👍🏻"
 
 echo -e "${GREEN} Get internal IP for goat-api service ${NC}"
 INTERNAL_IP_API=$(kubectl get service goat-api-svc -n goat-api -o jsonpath='{.spec.clusterIP}')
-# Ingress Controller API
-TRAEFIK_IP=$(kubectl get service traefik-web-service -n goat-api -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 echo -e "${GREEN} Test Goat API ${NC}"
 kubectl run -it --rm test --image=debian --restart=Never -n goat-api -- bash -c "apt-get update && apt-get install curl -y && curl -k -v http://goat-api-svc/customer?id=1"
@@ -65,6 +63,8 @@ az apim product api add \
 --service-name ${APIM_NAME} \
 --product-id Starter \
 --api-id goat-api
+
+sleep 10
 
 echo -e "${GREEN} Call customer operation ${NC}"
 curl -H "Ocp-Apim-Subscription-Key: ${API_KEY}" "https://api.$CUSTOM_DOMAIN/goat/customer?id=1" | jq

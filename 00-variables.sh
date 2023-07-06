@@ -1,4 +1,4 @@
-CUSTOM_DOMAIN="matrixapp.es"
+CUSTOM_DOMAIN="thedev.es"
 
 RESOURCE_GROUP="waf-apim-aks-${CUSTOM_DOMAIN//./}"
 LOCATION="uksouth"

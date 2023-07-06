@@ -36,7 +36,9 @@ source 09-add-tour-of-heroes-api-to-apim.sh
 # Call tour of heroes api through apim (It doesn't work because APIM is internal)
 source 10-call-tour-of-heroes-api-through-apim.sh
 
-# Update your DNS provider with the public IP of the App Gateway for the three subdomains
+# Get public IP of the App Gateway
+APP_GW_PUBLIC_IP=$(az network public-ip show --name $APP_GW_PUBLIC_IP_NAME --resource-group $RESOURCE_GROUP --query ipAddress -o tsv)
+echo "Update your DNS provider with the public IP of the App Gateway $APP_GW_PUBLIC_IP for the three subdomains"
 
 # Call tour of heroes api through app gateway
 source 11-call-tour-of-heroes-api-through-app-gateway.sh
@@ -46,6 +48,3 @@ source 12-deploy-goat-api.sh
 
 # Enable WAF and custom errors
 source 13-enable-waf-and-custom-errors.sh
-
-# Publish Developer Portal via App Gateway
-source 14-publish-developer-portal-via-app-gateway.sh

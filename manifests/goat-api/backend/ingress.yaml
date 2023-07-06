@@ -1,22 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: goat-api-ingress
-  # annotations:
-  # kubernetes.io/ingress.class: azure/application-gateway
-  # appgw.ingress.kubernetes.io/health-probe-path: "/customer?id=1"
-  # appgw.ingress.kubernetes.io/health-probe-port: "5077"
-  # appgw.ingress.kubernetes.io/backend-path-prefix: "/test" #allows the backend path specified in an ingress resource to be rewritten with prefix specified in this annotation. It allows users to expose services whose endpoints are different than endpoint names used to expose a service in an ingress resource.
-  # appgw.ingress.kubernetes.io/ssl-redirect: "false" #redirects HTTP requests to HTTPS
-  # appgw.ingress.kubernetes.io/connection-draining: "true" # This annotation allows us to specify whether to enable connection draining. Connection draining allows the Application Gateway to stop sending new requests to the backend when the backend is being deleted or scaled in. The default value is false.
-  # appgw.ingress.kubernetes.io/connection-draining-timeout: "60" # This annotation allows us to specify the time in seconds to wait for existing requests to drain. The default value is 60 seconds.
-  # appgw.ingress.kubernetes.io/cookie-based-affinity: "true" # This annotation allows us to specify whether to enable cookie-based affinity. Cookie-based affinity allows the Application Gateway to direct all requests from a client to the same backend instance. The default value is false.
-  # appgw.ingress.kubernetes.io/request-timeout: "30" # This annotation allows us to specify the timeout in seconds for the Application Gateway to wait for the response from the backend. The default value is 30 seconds.
-  # appgw.ingress.kubernetes.io/use-private-ip: "false" # This annotation allows us to specify whether to use the private IP address of the backend instances. The default value is false.
-  # appgw.ingress.kubernetes.io/backend-protocol: "http" # This annotation allows us to specify the protocol used to communicate with the backend. The default value is http.
-  # appgw.ingress.kubernetes.io/rewrite-rule-set: "redirect-to-https" # This annotation allows us to specify the name of the rewrite rule set to use for the ingress. The default value is redirect-to-https.
-  # appgw.ingress.kubernetes.io/waf-policy-for-path: "/subscriptions/3dda189f-8e19-4aff-96c5-c9597f59108a/resourceGroups/aks-addon-agic-brownfield/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies/custom-waf-policies" # This annotation allows us to specify the name of the WAF policy to use for the ingress. The default value is default.
-  # appgw.ingress.kubernetes.io/waf-policy-for-path: "/subscriptions/3dda189f-8e19-4aff-96c5-c9597f59108a/resourceGroups/agic-workload-identity/providers/Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies/general-waf-policies" # This annotation allows us to specify the name of the WAF policy to use for the ingress. The default value is default.
+  name: goat-api-ingress  
 spec:
   rules:
     - host: goat.apis.internal

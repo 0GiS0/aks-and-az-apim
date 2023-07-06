@@ -22,6 +22,8 @@ az storage blob upload-batch \
 --destination \$web \
 --source custom-error-pages
 
+sleep 10
+
 echo -e "${GREEN}Update App Gw to use custom error pages"
 az network application-gateway update \
 --name $APP_GW_NAME \
